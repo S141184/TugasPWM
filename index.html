@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Mood Playlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: #1DB954;
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            animation: fadeIn 2s ease-in;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .navbar ul li {
+            margin-left: 2rem;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            color: #1DB954;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-section video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 2s ease-in;
+        }
+
+        .hero-section button {
+            padding: 1rem 2.5rem;
+            background-color: #1DB954;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            animation: fadeIn 2.5s ease-in;
+        }
+
+        .hero-section button:hover {
+            transform: scale(1.1);
+            background-color: #14833b;
+        }
+
+        .about-section {
+            background: #f4f4f4;
+            padding: 5rem 2rem;
+            text-align: center;
+            display: flex;  
+            flex-direction: column;  
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        .about-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInLeft 1.5s forwards;
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            opacity: 0;
+            animation: fadeInRight 1.5s forwards;
+        }
+
+        .about-section img {
+            max-width: 50%;
+            height: auto;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 2s ease-in-out forwards;
+            display : block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .promotion-section {
+            background: #f4f4f4;
+            padding: 4rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh; 
+        }
+
+        .promotion-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInLeft 1.5s forwards;
+        }
+
+        .promotion-section iframe {
+            width: 100%;
+            max-width: 900px; 
+            height: 500px; 
+            border: none;
+            opacity: 0;
+            animation: fadeInUp 2s ease-in-out forwards;
+        }
+
+        .collection-section {
+            padding: 5rem 2rem;
+            background-color: #7a7676;
+            text-align: center;
+            
+        }
+
+        .collection-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .article-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 0 auto;
+            max-width: 1000px;
+        }
+
+        .article-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .article-card h3 {
+            font-size: 1.8rem;
+            color: #5dd988;
+            margin-bottom: 1rem;
+        }
+
+        .article-card p {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .categories-section {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: #e9ecef;
+        }
+
+        .categories-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .categories-list {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .category-item {
+            padding: 1rem 2rem;
+            background-color: #1DB954;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .category-item:hover {
+            background-color: #14833b;
+            transform: translateY(-5px);
+        }
+        .article-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 250px;
+            background-image: url('cream.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .article-card p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .spotify-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .spotify-btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .spotify-btn:hover {
+            background-color: #14833b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feedback-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            background-color: #f4f4f4;
+            border-top: 2px solid #ddd;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .feedback-section {
+            max-width: 600px;
+            width: 100%; 
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #282828;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #1DB954;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #919496;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #1DB954;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #1DB954;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #404040;
+            color: #919496;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+        }
+    </style>
+
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">Spotify Playlist</div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#promotion">Promotional Video</a></li>
+            <li><a href="#collection">Collection</a></li>
+            <li><a href="#categories">Categories</a></li>
+            <li><a href="#Feedback">Feedback</a></li>
+        </ul>
+    </header>
+
+    <section id="home" class="hero-section">
+        <video autoplay muted loop id="hero-video">
+            <source src="bg video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <h1>Discover Your Perfect Playlist</h1>
+        <p>Music that matches your mood.</p>
+        <button onclick="alert('Explore our playlists!')">Explore Playlists</button>
+    </section>
+
+    <section id="about" class="about-section">
+        <h2>About Us</h2>
+        <img src="about us.jpg" alt="About Us Image">
+        <p>Kami adalah Kelompok 5 dari mata kuliah Pengembangan Web dan Mobile di Universitas Teknologi Yogyakarta. Kami terdiri dari individu-individu dengan minat dan keahlian di bidang teknologi, yang bekerja sama untuk mengembangkan aplikasi web dan mobile yang tidak hanya fungsional, tetapi juga intuitif, mudah digunakan, dan menarik. Kami meyakini bahwa teknologi memiliki potensi yang sangat besar untuk mempermudah kehidupan sehari-hari. Melalui proyek ini, kami berkomitmen untuk menghadirkan solusi inovatif yang dapat memberikan pengalaman yang lebih baik dan menyenangkan bagi para pengguna. Mari bergabung dalam perjalanan kami dan temukan apa yang telah kami ciptakan!</p>
+    </section>
+
+    <section id="promotion" class="promotion-section">
+        <h2>Promotional Video</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/PDEc0jz2IUI?si=Pob98y0Ylh56Fn89" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </section>
+
+    <section id="collection" class="collection-section">
+        <h2>Our Playlist Collection</h2>
+        <div class="article-container">
+            <div class="article-card">
+                <h3>Happy Vibes</h3>
+                <img src="Happy.jpg" alt="Happy Vibes" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Boost your mood with uplifting tunes that will make you smile and dance.</p>
+                <a href="https://open.spotify.com/playlist/2JREpGobv0aF3rDOrIrNa3?si=TuEKN7DrQB2rtvm6tjskuA&pi=fVg0EUPaRWKBE" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+            <div class="article-card">
+                <h3>Focused</h3>
+                <img src="focus.jpg" alt="focus Vibes" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Concentrate better with these carefully selected tracks for productivity.</p>
+                <a href="https://open.spotify.com/playlist/37i9dQZF1DZ06evO3FhN2p?si=2o_gT_81Q_G30hJEIns-lQ" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+            <div class="article-card">
+                <h3>Sad</h3>
+                <img src="sad.jpg" alt="sad" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Get pumped up with high-energy tracks perfect for your workout session.</p>
+                <a href="https://open.spotify.com/playlist/21ynBb2TJhK7ATclNhbTJr?si=jFcAbwDxT1WrkUTpvelZ2A" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+            <div class="article-card">
+                <h3>Chill Relaxation</h3>
+                <img src="rilex.jpg" alt="rilex" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Unwind and relax with smooth, calming melodies.</p>
+                <a href="https://open.spotify.com/playlist/7LZEFSmpKXFprU8Vi82tHf?si=26u-nieXRbOS6ll9susIFg" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+            <div class="article-card">
+                <h3>Energetic</h3>
+                <img src="energi.jpg" alt="energi" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Unwind and relax with smooth, calming melodies.</p>
+                <a href="https://open.spotify.com/playlist/4kZ5vf6eD8GfF4aRfvjF5j?si=q-gXUCZeQIybeT5fmkyKHg&pi=9Wa0ep-dRoKXp" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+            <div class="article-card">
+                <h3>Romantic</h3>
+                <img src="romantic.jpg" alt="romantic" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+                <p>Unwind and relax with smooth, calming melodies.</p>
+                <a href="https://open.spotify.com/playlist/31WUpMYENacKfRNPh4qSQ0?si=ZJQJKbi4QP-bnTqkXxSJDA&pi=a-wFDphwqYSJqa" target="_blank" class="spotify-btn">
+                    <i class="fab fa-spotify"></i> Listen on Spotify
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories" class="categories-section">
+        <h2>Categories</h2>
+        <div class="categories-list">
+            <div class="category-item"><a href="#collection">Happy</a></div> 
+            <div class="category-item"><a href="#collection">Sad</a></div>
+            <div class="category-item"><a href="#collection">Focused</a></div>
+            <div class="category-item"><a href="#collection">Relaxed</a></div>
+            <div class="category-item"><a href="#collection">Energetic</a></div>
+            <div class="category-item"><a href="#collection">Romantic</a></div>
+        </div>    
+    </section>
+
+    <section class="feedback-container">
+        <div class="feedback-section">
+            <h3>We Value Your Feedback</h3>
+            <p>Let us know your thoughts and help us improve!</p>
+            <form id="feedback-form">
+                <textarea id="feedback-input" placeholder="Write your feedback here..." required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="feedback-success" class="hidden">Thank you for your feedback!</div>
+        </div>
+    </section>
+
+    <footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#promotion">Promotion</a></li>
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Communities</h4>
+            <ul>
+                <li><a href="#">For Artists</a></li>
+                <li><a href="#">Developers</a></li>
+                <li><a href="#">Advertising</a></li>
+                <li><a href="#">Investors</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>Connect With Us</h4>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Spotify Mood Playlist. All rights reserved.</p>
+    </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.navbar a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 80) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const articleCards = document.querySelectorAll('.article-card');
+        const options = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, options);
+
+        articleCards.forEach(card => {
+            observer.observe(card);
+        });
+
+
+        const feedbackForm = document.getElementById('feedback-form');
+        const feedbackInput = document.getElementById('feedback-input');
+        const feedbackSuccess = document.getElementById('feedback-success');
+
+        feedbackForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        feedbackSuccess.classList.remove('hidden');
+        feedbackSuccess.classList.add('visible');
+
+
+    feedbackInput.value = '';
+
+    setTimeout(() => {
+        feedbackSuccess.classList.remove('visible');
+        feedbackSuccess.classList.add('hidden');
+    }, 3000);
+});
+
+    </script>
+</body>
+</html>
+
+           
